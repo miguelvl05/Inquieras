@@ -1,0 +1,23 @@
+:root {
+  font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  color: #1f2933;
+  background: #f5f7fa;
+}
+
+body { margin: 0; }
+
+.contenedor {
+  max-width: 720px;
+  margin: 4rem auto;
+  padding: 0 1.5rem;
+}
+
+.tarjeta {
+  background: #fff;
+  border: 1px solid #e4e7eb;
+  border-radius: 12px;
+  padding: 1.25rem 1.5rem;
+}
+
+.ok { color: #18794e; }
+.error { color: #c62828; }

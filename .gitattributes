@@ -1,0 +1,3 @@
+# Evita problemas de saltos de línea entre Windows y Linux (contenedores)
+* text=auto eol=lf
+*.bat text eol=crlf

@@ -1,0 +1,64 @@
+services:
+  # Base de datos local OPCIONAL. Por defecto usamos la de Railway.
+  # Si algún día quieren trabajar sin internet, descomenten este bloque
+  # y cambien DB_HOST=db en el .env.
+  # db:
+  #   image: mysql:8.4
+  #   container_name: inquieras_db
+  #   restart: always
+  #   ports:
+  #     - "3306:3306"
+  #   environment:
+  #     MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
+  #     MYSQL_DATABASE: ${DB_NAME}
+  #     MYSQL_USER: ${DB_USER}
+  #     MYSQL_PASSWORD: ${DB_PASSWORD}
+  #   volumes:
+  #     - db_data:/var/lib/mysql
+  #     - ./database/init.sql:/docker-entrypoint-initdb.d/1_init.sql
+  #     - ./database/seeds.sql:/docker-entrypoint-initdb.d/2_seeds.sql
+
+  backend:
+    build:
+      context: ./backend
+    container_name: inquieras_backend
+    command: python manage.py runserver 0.0.0.0:8000
+    ports:
+      - "8000:8000"
+    environment:
+      - DB_HOST=${DB_HOST}
+      - DB_PORT=${DB_PORT}
+      - DB_USER=${DB_USER}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - DB_NAME=${DB_NAME}
+      - DB_SSL=${DB_SSL:-}
+      - DATABASE_URL=${DATABASE_URL:-}
+      - DJANGO_SECRET_KEY=${DJANGO_SECRET_KEY}
+      - DJANGO_DEBUG=${DJANGO_DEBUG}
+      - DJANGO_ALLOWED_HOSTS=${DJANGO_ALLOWED_HOSTS}
+      - CORS_ALLOWED_ORIGINS=${CORS_ALLOWED_ORIGINS:-http://localhost:5173}
+      - GOOGLE_CLIENT_ID=${GOOGLE_CLIENT_ID}
+      - GOOGLE_CLIENT_SECRET=${GOOGLE_CLIENT_SECRET}
+      - JWT_KEY=${JWT_KEY}
+    volumes:
+      # Refleja el código local en el contenedor (hot reloading)
+      - ./backend:/app
+
+  frontend:
+    build:
+      context: ./frontend
+    container_name: inquieras_frontend
+    ports:
+      - "5173:5173"
+    environment:
+      - VITE_API_URL=${VITE_API_URL}
+    depends_on:
+      - backend
+    volumes:
+      # Refleja el código local
+      - ./frontend:/app
+      # Ignora la carpeta node_modules local para usar la del contenedor Linux
+      - /app/node_modules
+
+volumes:
+  db_data:
