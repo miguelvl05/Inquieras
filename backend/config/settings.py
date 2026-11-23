@@ -36,6 +36,7 @@ INSTALLED_APPS = [
     "corsheaders",
     # Propias
     "core",
+    "inquieras",
 ]
 
 MIDDLEWARE = [
